@@ -1,0 +1,65 @@
+# Large image directories
+images_resized/
+segmentation_masks/
+combined_inference_results/
+
+# Training data with images
+augmented_classification_data/train/
+augmented_classification_data/test/
+augmented_classification_data/val/
+
+# Model checkpoints (large .pth files)
+*.pth
+classification/outputs/*.pth
+segmentation/outputs/*.pth
+
+# Python cache
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+
+# Virtual environments
+.venv/
+venv/
+ENV/
+env/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# Distribution / packaging
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# PyTorch
+*.pt
+
+# Logs
+*.log
+
+# OS
+.DS_Store
+Thumbs.db
