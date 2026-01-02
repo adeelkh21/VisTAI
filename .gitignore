@@ -1,7 +1,6 @@
 # Large image directories
 images_resized/
 segmentation_masks/
-combined_inference_results/
 
 # Training data with images
 augmented_classification_data/train/
