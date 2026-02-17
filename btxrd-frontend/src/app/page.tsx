@@ -60,17 +60,17 @@ export default function Home() {
   /* ── Landing ──────────────────────────────────────────────────────── */
   const LandingView = () => (
     <StepWrapper>
-      <div className="flex flex-col items-center text-center max-w-4xl mx-auto px-6">
+      <div className="flex flex-col items-center text-center max-w-4xl mx-auto px-6 py-4">
         {/* Hero Icon */}
         <motion.div
           initial={{ scale: 0.9, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
           transition={{ duration: 0.6, ease: [0.4, 0, 0.2, 1] }}
-          className="relative mb-8"
+          className="relative mb-4"
         >
-          <div className="absolute inset-0 bg-blue-500/20 blur-3xl rounded-full" />
-          <div className="relative w-16 h-16 rounded-2xl bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center shadow-lg shadow-blue-500/30">
-            <Activity className="w-8 h-8 text-white" strokeWidth={2.5} />
+          <div className="absolute inset-0 bg-blue-500/20 blur-2xl rounded-full" />
+          <div className="relative w-12 h-12 rounded-xl bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center shadow-lg shadow-blue-500/30">
+            <Activity className="w-6 h-6 text-white" strokeWidth={2.5} />
           </div>
         </motion.div>
 
@@ -80,11 +80,11 @@ export default function Home() {
           animate={{ y: 0, opacity: 1 }}
           transition={{ delay: 0.1, duration: 0.6 }}
         >
-          <h1 className="text-5xl sm:text-6xl font-bold text-white tracking-tight leading-tight">
-            Bone Tumor
+          <h1 className="text-3xl sm:text-4xl font-bold text-white tracking-tight leading-tight">
+            VistAI
             <br />
             <span className="bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent">
-              X-Ray Detection
+              Bone Tumor Analysis & Diagnosis
             </span>
           </h1>
         </motion.div>
@@ -94,10 +94,10 @@ export default function Home() {
           initial={{ y: 20, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ delay: 0.2, duration: 0.6 }}
-          className="mt-6 text-lg text-slate-400 max-w-2xl leading-relaxed"
+          className="mt-3 text-base text-slate-400 max-w-2xl leading-relaxed"
         >
-          Clinical-grade AI for automated classification and segmentation of bone tumors
-          from radiographic imaging using knowledge-distilled deep learning.
+          AI-powered platform for bone tumor classification, segmentation, and intelligent 
+          reporting using knowledge-distilled deep learning.
         </motion.p>
 
         {/* CTA Button */}
@@ -108,7 +108,7 @@ export default function Home() {
           whileHover={{ scale: 1.02, boxShadow: "0 0 30px rgba(59, 130, 246, 0.4)" }}
           whileTap={{ scale: 0.98 }}
           onClick={() => setStep("upload")}
-          className="group mt-10 px-8 py-4 rounded-xl bg-blue-600 text-white font-semibold text-base hover:bg-blue-500 shadow-xl shadow-blue-600/30 transition-all flex items-center gap-2"
+          className="group mt-5 px-6 py-3 rounded-xl bg-blue-600 text-white font-semibold text-sm hover:bg-blue-500 shadow-xl shadow-blue-600/30 transition-all flex items-center gap-2"
         >
           <span>Start Analysis</span>
           <Sparkles className="w-4 h-4 group-hover:rotate-12 transition-transform" />
@@ -119,12 +119,12 @@ export default function Home() {
           initial={{ y: 40, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ delay: 0.5, duration: 0.6 }}
-          className="grid sm:grid-cols-3 gap-6 mt-20 w-full"
+          className="grid sm:grid-cols-3 gap-4 mt-8 w-full"
         >
           {[
-            { icon: Brain, title: "9 Tumor Classes", desc: "Multi-class classification with confidence scoring" },
-            { icon: Microscope, title: "Precise Segmentation", desc: "Pixel-level tumor boundary detection" },
-            { icon: MessageSquare, title: "AI Assistant", desc: "Interactive medical Q&A and report generation" },
+            { icon: Brain, title: "Multi-Class Classification", desc: "9 tumor types with confidence scoring and malignancy detection" },
+            { icon: Microscope, title: "Semantic Segmentation", desc: "Pixel-level tumor boundary detection with attention maps" },
+            { icon: MessageSquare, title: "Intelligent Reporting", desc: "AI medical assistant with professional report generation" },
           ].map((feature, i) => {
             const Icon = feature.icon;
             return (
@@ -133,12 +133,12 @@ export default function Home() {
                 initial={{ y: 20, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
                 transition={{ delay: 0.6 + i * 0.1 }}
-                className="group relative p-6 rounded-2xl bg-[#111827] border border-[#1f2937] hover:border-blue-500/50 transition-all"
+                className="group relative p-4 rounded-xl bg-[#111827] border border-[#1f2937] hover:border-blue-500/50 transition-all"
               >
-                <div className="absolute inset-0 bg-gradient-to-br from-blue-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity rounded-2xl" />
-                <Icon className="w-6 h-6 text-blue-400 mb-4" strokeWidth={2} />
-                <h3 className="font-semibold text-white text-base mb-2">{feature.title}</h3>
-                <p className="text-sm text-slate-400 leading-relaxed">{feature.desc}</p>
+                <div className="absolute inset-0 bg-gradient-to-br from-blue-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity rounded-xl" />
+                <Icon className="w-5 h-5 text-blue-400 mb-2" strokeWidth={2} />
+                <h3 className="font-semibold text-white text-sm mb-1">{feature.title}</h3>
+                <p className="text-xs text-slate-400 leading-relaxed">{feature.desc}</p>
               </motion.div>
             );
           })}
@@ -149,9 +149,9 @@ export default function Home() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.9, duration: 0.6 }}
-          className="mt-16 flex items-start gap-3 p-4 rounded-xl bg-amber-950/30 border border-amber-900/40 text-left max-w-2xl"
+          className="mt-6 flex items-start gap-2 p-3 rounded-lg bg-amber-950/30 border border-amber-900/40 text-left max-w-2xl"
         >
-          <Shield className="w-5 h-5 text-amber-400 flex-shrink-0 mt-0.5" />
+          <Shield className="w-4 h-4 text-amber-400 flex-shrink-0 mt-0.5" />
           <p className="text-xs text-amber-200/80 leading-relaxed">
             <strong className="text-amber-300">Medical Disclaimer:</strong> This system is designed for research
             and educational purposes. AI predictions do not constitute medical diagnosis.
@@ -488,7 +488,7 @@ export default function Home() {
               </div>
             </div>
             <div>
-              <span className="text-base font-semibold text-white tracking-tight">BTXRD</span>
+              <span className="text-base font-semibold text-white tracking-tight">VistAI</span>
               <span className="hidden md:inline text-xs text-slate-500 ml-2">Medical AI</span>
             </div>
           </button>

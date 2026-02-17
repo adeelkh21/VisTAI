@@ -13,8 +13,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "BTXRD – Bone Tumor X-Ray Detection",
-  description: "AI-powered bone tumor classification and segmentation from X-ray images",
+  title: "VistAI – Knowledge Distilled AI for Medical Imaging",
+  description: "AI-powered bone tumor classification and segmentation from X-ray images using knowledge distillation",
 };
 
 export default function RootLayout({

@@ -225,7 +225,7 @@ export default function ReportViewer() {
     const url = fileUrl(pdfUrl);
     const a = document.createElement("a");
     a.href = url;
-    a.download = `BTXRD_Report_${imageId || "case"}.pdf`;
+    a.download = `VistAI_Report_${imageId || "case"}.pdf`;
     a.target = "_blank";
     a.click();
   };
