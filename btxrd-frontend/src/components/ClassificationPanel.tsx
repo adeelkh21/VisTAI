@@ -84,20 +84,6 @@ export default function ClassificationPanel({ classification, gradcamUrl }: Prop
           ))}
         </div>
       </div>
-
-      {/* Grad-CAM */}
-      {gradcamUrl && (
-        <div className="px-5 py-4 border-t border-slate-700">
-          <p className="text-sm font-medium text-slate-400 mb-2">Classification Attention (Grad-CAM)</p>
-          <div className="rounded-xl overflow-hidden border border-slate-700">
-            <img
-              src={fileUrl(gradcamUrl)}
-              alt="Classification Grad-CAM"
-              className="w-full object-contain"
-            />
-          </div>
-        </div>
-      )}
     </motion.div>
   );
 }

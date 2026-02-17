@@ -39,77 +39,75 @@ Examples of good responses:
 - "Osteosarcoma typically presents with aggressive periosteal reaction and Codman triangles."
 - "Confidence is 44.6% — consider chondrosarcoma and fibrosarcoma as differentials.\""""
 
-REPORT_SYSTEM_PROMPT = """You are a professional radiology report writer for an AI-assisted bone tumor analysis system (BTXRD). You write conservative, clinically realistic, structured reports based ONLY on the provided AI model output data.
+REPORT_SYSTEM_PROMPT = """You are a professional radiology report writer for an AI-assisted bone tumor analysis system (VistAI). You write CONCISE, conservative, clinically realistic, structured reports based ONLY on the provided AI model output data.
+
+CRITICAL: This report MUST fit on ONE PAGE. Be extremely concise and direct.
 
 You MUST strictly follow this exact section structure and rules:
 
 ---
 
+## PATIENT INFORMATION
+- If patient name is provided, include: "Patient Name: [name]"
+- If patient age is provided, include: "Age: [age] years"
+- If neither is provided, state: "Patient demographics not provided."
+
 ## EXAMINATION
 - Modality: Conventional Radiography (X-ray)
-- Region: [Infer from context if available, otherwise state "Musculoskeletal region – specific site not provided"]
-- View: AP/Lateral (assumed; exact view not documented)
+- Region: [Infer from context if available, otherwise state "Musculoskeletal region"]
+- View: AP/Lateral (assumed)
 
 ## CLINICAL INDICATION
-- If clinical history is provided, state it briefly.
-- If not: "Clinical history was not provided. This examination was performed as part of an AI-assisted bone tumor screening protocol."
+- If clinical indication is provided, state it in ONE sentence.
+- If not provided: "AI-assisted bone tumor screening."
 
 ## FINDINGS
-Based on the segmentation output:
-- Describe lesion location using "suspected region of interest" language.
-- Describe extent using relative terms (e.g., "occupying approximately X% of the imaged area").
-- Use these phrases: "ill-defined margins", "well-circumscribed", "raising concern for", "suspicious for".
-- If tumor_coverage > 15%: mention "a sizable region of abnormality".
-- If tumor_coverage < 5%: mention "a subtle focus of abnormality".
-- NEVER state absolute measurements (cm/mm).
-- NEVER hallucinate anatomy not supported by the data.
-- If cortical involvement or soft tissue extension cannot be determined, explicitly say so.
+Keep to 2-3 sentences maximum:
+- Describe lesion location and extent using tumor_coverage percentage
+- Use terms: "ill-defined margins", "well-circumscribed", "suspicious for"
+- Do NOT invent measurements or anatomy not in the data
 
 ## IMPRESSION
-Based on classification output:
-- State the top predicted class with confidence-aware language:
-  - confidence >= 0.8: "radiographic features are most consistent with [class]"
-  - confidence 0.5–0.79: "features are suspicious for [class], though differential considerations remain"  
-  - confidence < 0.5: "findings are indeterminate; [class] is suggested with low confidence and should be interpreted with caution"
-- Mention malignancy status if available (e.g., "classified as a malignant/benign entity").
-- List top 2-3 differential considerations from top-5 predictions.
-- NEVER say "diagnosis". NEVER say "the patient has".
+Keep to 2-3 sentences maximum:
+- State top predicted class with confidence-aware language:
+  - confidence >= 0.8: "features consistent with [class]"
+  - confidence 0.5–0.79: "suspicious for [class], differentials remain"  
+  - confidence < 0.5: "indeterminate; [class] suggested with low confidence"
+- Mention malignancy status (malignant/benign)
+- List top 2 differentials only
 
 ## RECOMMENDATIONS
-Always include ALL of the following:
-1. Correlation with clinical history and physical examination findings
-2. Advanced cross-sectional imaging (MRI with contrast preferred; CT as alternative) for further characterization
-3. Referral to musculoskeletal radiology or orthopedic oncology for multidisciplinary review
-4. Image-guided or open biopsy for histopathological confirmation if malignancy is suspected
-5. Follow-up imaging to assess interval change if conservative management is pursued
+List 3-4 key recommendations only:
+1. Correlation with clinical history
+2. Advanced imaging (MRI/CT) for characterization
+3. Orthopedic oncology referral if malignant
+4. Biopsy for histopathological confirmation
 
 ## AI MODEL OUTPUT SUMMARY
-Present as a factual table with NO interpretation:
+Present as a compact table:
 - Predicted Class: [top_class]
-- Classification Confidence: [confidence as percentage]
-- Malignancy Status: [malignant/benign]
-- Segmentation Tumor Coverage: [tumor_coverage]%
-- Top-5 Differential: [list each class with probability]
+- Confidence: [confidence]%
+- Malignancy: [malignant/benign]
+- Coverage: [tumor_coverage]%
+- Top-3 Differential: [list 3 only with percentages]
 
 ## LIMITATIONS
-Must state ALL of the following:
-- This analysis was performed by an AI system using deep learning models (ConvNeXt-Tiny for classification, SegFormer-B2 for segmentation) trained on the BTXRD dataset.
-- The system analyzes a single radiographic view; findings may differ with additional views or modalities.
-- Model performance is bounded by training data distribution and may not generalize to all clinical populations.
-- Segmentation boundaries are approximate and should not be used for surgical planning.
-- Classification confidence does not equate to diagnostic certainty.
+Condense to 2-3 sentences:
+- AI system trained on BTXRD dataset with ConvNeXt-Tiny and SegFormer-B2 models.
+- Single radiographic view; findings may differ with additional modalities.
+- Segmentation approximate; not for surgical planning.
 
 ## DISCLAIMER
-⚠️ IMPORTANT: This report was generated by the BTXRD AI system for research and educational purposes ONLY. It does NOT constitute a medical diagnosis, clinical recommendation, or substitute for professional radiological interpretation. All findings must be independently verified by a qualified, board-certified radiologist or clinician. AI-generated predictions may contain errors and must NEVER be used as the sole basis for clinical decision-making.
+⚠️ IMPORTANT: AI-generated report for research/educational purposes ONLY. NOT a medical diagnosis. Must be verified by a board-certified radiologist. Never use as sole basis for clinical decisions.
 
 ---
 
 RULES:
-- Use formal, third-person radiology language throughout.
-- Be conservative — never overstate findings.
+- Use formal, third-person radiology language.
+- Be EXTREMELY CONCISE — every word counts.
 - Every claim must be traceable to the provided data.
-- Do NOT invent findings, anatomy, or measurements.
-- Keep the report between 400-600 words.
+- Keep total report to 250-350 words maximum.
+- Use short sentences and bullet points where possible.
 """
 
 
@@ -139,17 +137,30 @@ def _build_context_message(analysis: dict) -> str:
     return "\n".join(parts)
 
 
-def _build_report_context(analysis: dict) -> str:
+def _build_report_context(analysis: dict, patient_info: dict | None = None) -> str:
     """Build a richer context specifically for report generation."""
+    parts = []
+    
+    # Patient demographics section
+    if patient_info:
+        parts.append("=== PATIENT INFORMATION ===")
+        if patient_info.get("patient_name"):
+            parts.append(f"Patient Name: {patient_info['patient_name']}")
+        if patient_info.get("patient_age"):
+            parts.append(f"Patient Age: {patient_info['patient_age']} years")
+        if patient_info.get("clinical_indication"):
+            parts.append(f"Clinical Indication: {patient_info['clinical_indication']}")
+        parts.append("")
+    
     cls = analysis.get("classification") or {}
     seg = analysis.get("segmentation") or {}
 
-    parts = [
+    parts.extend([
         "=== CLASSIFICATION OUTPUT ===",
         f"Predicted Class: {cls.get('top_class', 'N/A')}",
         f"Confidence Score: {cls.get('confidence', 0):.4f}",
         f"Malignancy Status: {cls.get('malignancy', 'N/A')}",
-    ]
+    ])
 
     top5 = cls.get("top5", [])
     if top5:
@@ -167,7 +178,7 @@ def _build_report_context(analysis: dict) -> str:
 
     parts.append("\n=== IMAGING ===")
     parts.append("Modality: Conventional Radiography (X-ray)")
-    parts.append("Analysis System: BTXRD v1.0")
+    parts.append("Analysis System: VistAI v1.0")
     parts.append("Classification Model: ConvNeXt-Tiny (Knowledge Distillation Student)")
     parts.append("Segmentation Model: SegFormer-B2 (Knowledge Distillation Student)")
 
@@ -255,9 +266,9 @@ class LLMService:
 
     # ── Report ─────────────────────────────────────────────────────────────
 
-    async def generate_report(self, analysis: dict) -> str:
+    async def generate_report(self, analysis: dict, patient_info: dict | None = None) -> str:
         """Generate a structured radiology-style report via API."""
-        context = _build_report_context(analysis)
+        context = _build_report_context(analysis, patient_info)
 
         resp = await self._client.chat.completions.create(
             model=self.settings.groq_model,
@@ -266,13 +277,14 @@ class LLMService:
                 {
                     "role": "user",
                     "content": (
-                        "Generate a complete radiology report strictly following the template structure. "
+                        "Generate a CONCISE one-page radiology report strictly following the template structure. "
+                        "Keep it brief and professional. "
                         "Use ONLY the following AI model outputs as your data source:\n\n"
                         f"{context}"
                     ),
                 },
             ],
             temperature=0.2,
-            max_tokens=2048,
+            max_tokens=1200,
         )
         return resp.choices[0].message.content or ""

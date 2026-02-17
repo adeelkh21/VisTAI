@@ -49,67 +49,67 @@ def _build_styles() -> dict:
     custom = {
         "title": ParagraphStyle(
             "ReportTitle", parent=styles["Title"],
-            fontSize=22, leading=28, textColor=NAVY,
-            spaceAfter=4, alignment=TA_CENTER,
+            fontSize=14, leading=16, textColor=NAVY,
+            spaceAfter=2, alignment=TA_CENTER,
             fontName="Helvetica-Bold",
         ),
         "subtitle": ParagraphStyle(
             "ReportSubtitle", parent=styles["Normal"],
-            fontSize=10, leading=14, textColor=LIGHT_SLATE,
-            alignment=TA_CENTER, spaceAfter=20,
+            fontSize=7, leading=9, textColor=LIGHT_SLATE,
+            alignment=TA_CENTER, spaceAfter=4,
         ),
         "section_heading": ParagraphStyle(
             "SectionHeading", parent=styles["Heading2"],
-            fontSize=13, leading=18, textColor=DARK_BLUE,
-            spaceBefore=16, spaceAfter=6,
+            fontSize=9, leading=11, textColor=DARK_BLUE,
+            spaceBefore=4, spaceAfter=2,
             fontName="Helvetica-Bold",
             borderWidth=0, borderPadding=0,
         ),
         "body": ParagraphStyle(
             "ReportBody", parent=styles["Normal"],
-            fontSize=10, leading=15, textColor=NAVY,
-            alignment=TA_JUSTIFY, spaceAfter=6,
+            fontSize=7, leading=9, textColor=NAVY,
+            alignment=TA_JUSTIFY, spaceAfter=1,
         ),
         "body_bold": ParagraphStyle(
             "ReportBodyBold", parent=styles["Normal"],
-            fontSize=10, leading=15, textColor=NAVY,
-            fontName="Helvetica-Bold", spaceAfter=4,
+            fontSize=7, leading=9, textColor=NAVY,
+            fontName="Helvetica-Bold", spaceAfter=1,
         ),
         "bullet": ParagraphStyle(
             "ReportBullet", parent=styles["Normal"],
-            fontSize=10, leading=15, textColor=NAVY,
-            leftIndent=18, spaceAfter=3,
-            bulletIndent=6, bulletFontSize=10,
+            fontSize=7, leading=9, textColor=NAVY,
+            leftIndent=12, spaceAfter=1,
+            bulletIndent=4, bulletFontSize=7,
         ),
         "numbered": ParagraphStyle(
             "ReportNumbered", parent=styles["Normal"],
-            fontSize=10, leading=15, textColor=NAVY,
-            leftIndent=18, spaceAfter=3,
+            fontSize=7, leading=9, textColor=NAVY,
+            leftIndent=12, spaceAfter=1,
         ),
         "disclaimer": ParagraphStyle(
             "Disclaimer", parent=styles["Normal"],
-            fontSize=9, leading=13, textColor=RED,
-            alignment=TA_JUSTIFY, spaceAfter=6,
+            fontSize=6, leading=8, textColor=RED,
+            alignment=TA_JUSTIFY, spaceAfter=2,
             fontName="Helvetica-BoldOblique",
         ),
         "footer": ParagraphStyle(
             "Footer", parent=styles["Normal"],
-            fontSize=7, leading=10, textColor=LIGHT_SLATE,
+            fontSize=6, leading=8, textColor=LIGHT_SLATE,
             alignment=TA_CENTER,
         ),
         "image_caption": ParagraphStyle(
             "ImageCaption", parent=styles["Normal"],
-            fontSize=9, leading=12, textColor=SLATE,
-            alignment=TA_CENTER, spaceAfter=12,
+            fontSize=6, leading=8, textColor=SLATE,
+            alignment=TA_CENTER, spaceAfter=2,
         ),
         "table_header": ParagraphStyle(
             "TableHeader", parent=styles["Normal"],
-            fontSize=9, leading=12, textColor=WHITE,
+            fontSize=7, leading=9, textColor=WHITE,
             fontName="Helvetica-Bold",
         ),
         "table_cell": ParagraphStyle(
             "TableCell", parent=styles["Normal"],
-            fontSize=9, leading=12, textColor=NAVY,
+            fontSize=7, leading=9, textColor=NAVY,
         ),
     }
     return custom
@@ -126,7 +126,7 @@ def _parse_markdown_to_flowables(md_text: str, styles: dict) -> list:
 
         # Skip empty lines
         if not line:
-            flowables.append(Spacer(1, 4))
+            flowables.append(Spacer(1, 1))
             i += 1
             continue
 
@@ -134,10 +134,10 @@ def _parse_markdown_to_flowables(md_text: str, styles: dict) -> list:
         if line.startswith("## "):
             heading_text = line[3:].strip()
             # Add a thin horizontal rule before each section
-            flowables.append(Spacer(1, 6))
+            flowables.append(Spacer(1, 2))
             flowables.append(HRFlowable(
-                width="100%", thickness=0.5, color=BORDER_COLOR,
-                spaceBefore=2, spaceAfter=6,
+                width="100%", thickness=0.3, color=BORDER_COLOR,
+                spaceBefore=1, spaceAfter=1,
             ))
             flowables.append(Paragraph(heading_text, styles["section_heading"]))
             i += 1
@@ -163,7 +163,7 @@ def _parse_markdown_to_flowables(md_text: str, styles: dict) -> list:
 
             if table_lines:
                 flowables.append(_build_table(table_lines, styles))
-                flowables.append(Spacer(1, 8))
+                flowables.append(Spacer(1, 2))
             continue
 
         # Numbered list (1. item, 2. item)
@@ -240,14 +240,14 @@ def _build_table(rows: list[list[str]], styles: dict) -> Table:
         ("BACKGROUND", (0, 0), (-1, 0), TABLE_HEADER_BG),
         ("TEXTCOLOR", (0, 0), (-1, 0), WHITE),
         ("FONTNAME", (0, 0), (-1, 0), "Helvetica-Bold"),
-        ("FONTSIZE", (0, 0), (-1, -1), 9),
+        ("FONTSIZE", (0, 0), (-1, -1), 7),
         ("ALIGN", (0, 0), (-1, -1), "LEFT"),
         ("VALIGN", (0, 0), (-1, -1), "MIDDLE"),
-        ("GRID", (0, 0), (-1, -1), 0.5, BORDER_COLOR),
-        ("TOPPADDING", (0, 0), (-1, -1), 5),
-        ("BOTTOMPADDING", (0, 0), (-1, -1), 5),
-        ("LEFTPADDING", (0, 0), (-1, -1), 8),
-        ("RIGHTPADDING", (0, 0), (-1, -1), 8),
+        ("GRID", (0, 0), (-1, -1), 0.3, BORDER_COLOR),
+        ("TOPPADDING", (0, 0), (-1, -1), 2),
+        ("BOTTOMPADDING", (0, 0), (-1, -1), 2),
+        ("LEFTPADDING", (0, 0), (-1, -1), 4),
+        ("RIGHTPADDING", (0, 0), (-1, -1), 4),
     ]
     # Alternate row shading
     for row_idx in range(1, len(table_data)):
@@ -265,29 +265,30 @@ def _add_header_footer(canvas, doc):
     # Header line
     canvas.setStrokeColor(BLUE)
     canvas.setLineWidth(1.5)
-    canvas.line(25 * mm, A4[1] - 18 * mm, A4[0] - 25 * mm, A4[1] - 18 * mm)
+    canvas.line(15 * mm, A4[1] - 10 * mm, A4[0] - 15 * mm, A4[1] - 10 * mm)
 
     # Header text
     canvas.setFont("Helvetica-Bold", 8)
     canvas.setFillColor(DARK_BLUE)
-    canvas.drawString(25 * mm, A4[1] - 16 * mm, "BTXRD — AI-Assisted Bone Tumor X-Ray Analysis")
+    canvas.drawString(15 * mm, A4[1] - 8.5 * mm, "VistAI — AI-Assisted Medical Imaging Analysis")
 
     canvas.setFont("Helvetica", 7)
     canvas.setFillColor(LIGHT_SLATE)
     date_str = datetime.now().strftime("%B %d, %Y  |  %H:%M")
-    canvas.drawRightString(A4[0] - 25 * mm, A4[1] - 16 * mm, date_str)
+    canvas.drawRightString(A4[0] - 15 * mm, A4[1] - 8.5 * mm, date_str)
 
     # Footer
     canvas.setStrokeColor(BORDER_COLOR)
     canvas.setLineWidth(0.5)
-    canvas.line(25 * mm, 18 * mm, A4[0] - 25 * mm, 18 * mm)
+    canvas.line(15 * mm, 10 * mm, A4[0] - 15 * mm, 10 * mm)
 
     canvas.setFont("Helvetica", 7)
     canvas.setFillColor(LIGHT_SLATE)
-    canvas.drawString(25 * mm, 13 * mm, "BTXRD v1.0  |  For Research & Educational Use Only  |  NOT a Clinical Diagnosis")
-    canvas.drawRightString(A4[0] - 25 * mm, 13 * mm, f"Page {doc.page}")
+    canvas.drawString(15 * mm, 7 * mm, "VistAI v1.0  |  For Research & Educational Use Only  |  NOT a Clinical Diagnosis")
+    canvas.drawRightString(A4[0] - 15 * mm, 7 * mm, f"Page {doc.page}")
 
     canvas.restoreState()
+
 
 
 def generate_pdf(
@@ -295,6 +296,7 @@ def generate_pdf(
     analysis: dict,
     upload_dir: str,
     case_id: str = "N/A",
+    patient_info: dict | None = None,
 ) -> bytes:
     """
     Generate a professional PDF report.
@@ -304,6 +306,7 @@ def generate_pdf(
         analysis: Full inference result dict
         upload_dir: Path to uploads directory (for resolving image paths)
         case_id: Image/case identifier
+        patient_info: Optional dict with patient_name, patient_age, clinical_indication
 
     Returns:
         PDF file content as bytes
@@ -314,23 +317,23 @@ def generate_pdf(
     doc = SimpleDocTemplate(
         buffer,
         pagesize=A4,
-        topMargin=25 * mm,
-        bottomMargin=25 * mm,
-        leftMargin=25 * mm,
-        rightMargin=25 * mm,
-        title="BTXRD AI Radiology Report",
-        author="BTXRD System",
+        topMargin=12 * mm,
+        bottomMargin=12 * mm,
+        leftMargin=15 * mm,
+        rightMargin=15 * mm,
+        title="VistAI AI Radiology Report",
+        author="VistAI System",
     )
 
     story = []
 
     # ── Title Page Content ─────────────────────────────────────────────────
-    story.append(Spacer(1, 30))
+    story.append(Spacer(1, 5))
 
     # Title
     story.append(Paragraph("AI-Assisted Radiology Report", styles["title"]))
-    story.append(Paragraph("Bone Tumor X-Ray Detection & Analysis", styles["subtitle"]))
-    story.append(Spacer(1, 8))
+    story.append(Paragraph("VistAI - Knowledge Distilled AI for Medical Imaging", styles["subtitle"]))
+    story.append(Spacer(1, 3))
 
     # Meta info table
     now = datetime.now()
@@ -340,20 +343,39 @@ def generate_pdf(
         [Paragraph("<b>Report Date:</b>", styles["table_cell"]),
          Paragraph(now.strftime("%B %d, %Y at %H:%M"), styles["table_cell"])],
         [Paragraph("<b>System:</b>", styles["table_cell"]),
-         Paragraph("BTXRD v1.0 (ConvNeXt-Tiny + SegFormer-B2)", styles["table_cell"])],
+         Paragraph("VistAI v1.0 (ConvNeXt-Tiny + SegFormer-B2)", styles["table_cell"])],
         [Paragraph("<b>Report Type:</b>", styles["table_cell"]),
          Paragraph("AI-Generated Screening Report", styles["table_cell"])],
     ]
-    meta_table = Table(meta_data, colWidths=[120, 320])
+    
+    # Add patient demographics if available
+    if patient_info:
+        if patient_info.get("patient_name"):
+            meta_data.insert(0, [
+                Paragraph("<b>Patient Name:</b>", styles["table_cell"]),
+                Paragraph(patient_info["patient_name"], styles["table_cell"])
+            ])
+        if patient_info.get("patient_age"):
+            meta_data.insert(1 if patient_info.get("patient_name") else 0, [
+                Paragraph("<b>Patient Age:</b>", styles["table_cell"]),
+                Paragraph(f"{patient_info['patient_age']} years", styles["table_cell"])
+            ])
+        if patient_info.get("clinical_indication"):
+            meta_data.append([
+                Paragraph("<b>Clinical Indication:</b>", styles["table_cell"]),
+                Paragraph(patient_info["clinical_indication"], styles["table_cell"])
+            ])
+    
+    meta_table = Table(meta_data, colWidths=[80, 240])
     meta_table.setStyle(TableStyle([
-        ("GRID", (0, 0), (-1, -1), 0.5, BORDER_COLOR),
+        ("GRID", (0, 0), (-1, -1), 0.3, BORDER_COLOR),
         ("BACKGROUND", (0, 0), (0, -1), TABLE_ALT_ROW),
-        ("TOPPADDING", (0, 0), (-1, -1), 6),
-        ("BOTTOMPADDING", (0, 0), (-1, -1), 6),
-        ("LEFTPADDING", (0, 0), (-1, -1), 8),
+        ("TOPPADDING", (0, 0), (-1, -1), 2),
+        ("BOTTOMPADDING", (0, 0), (-1, -1), 2),
+        ("LEFTPADDING", (0, 0), (-1, -1), 4),
     ]))
     story.append(meta_table)
-    story.append(Spacer(1, 20))
+    story.append(Spacer(1, 4))
 
     # ── Images ─────────────────────────────────────────────────────────────
     original_url = analysis.get("original_url", "")
@@ -372,16 +394,16 @@ def generate_pdf(
     valid_images = [(label, path) for label, path in image_paths.items() if path and os.path.exists(path)]
 
     if valid_images:
-        story.append(HRFlowable(width="100%", thickness=0.5, color=BORDER_COLOR, spaceAfter=8))
+        story.append(HRFlowable(width="100%", thickness=0.3, color=BORDER_COLOR, spaceAfter=2))
         story.append(Paragraph("IMAGING", styles["section_heading"]))
-        story.append(Spacer(1, 6))
+        story.append(Spacer(1, 2))
 
-        # Build image row (up to 3 images side by side)
+        # Build image row (up to 3 images side by side) - smaller images
         img_cells = []
         cap_cells = []
         for label, path in valid_images:
             try:
-                img = Image(path, width=2.0 * inch, height=2.0 * inch, kind="proportional")
+                img = Image(path, width=1.0 * inch, height=1.0 * inch, kind="proportional")
                 img_cells.append(img)
                 cap_cells.append(Paragraph(f"<i>{label}</i>", styles["image_caption"]))
             except Exception as e:
@@ -389,16 +411,16 @@ def generate_pdf(
 
         if img_cells:
             # Images row
-            img_table = Table([img_cells, cap_cells], colWidths=[2.2 * inch] * len(img_cells))
+            img_table = Table([img_cells, cap_cells], colWidths=[1.3 * inch] * len(img_cells))
             img_table.setStyle(TableStyle([
                 ("ALIGN", (0, 0), (-1, -1), "CENTER"),
                 ("VALIGN", (0, 0), (-1, -1), "MIDDLE"),
-                ("TOPPADDING", (0, 0), (-1, -1), 4),
-                ("BOTTOMPADDING", (0, 0), (-1, -1), 4),
+                ("TOPPADDING", (0, 0), (-1, -1), 1),
+                ("BOTTOMPADDING", (0, 0), (-1, -1), 1),
             ]))
             story.append(img_table)
 
-    story.append(Spacer(1, 12))
+    story.append(Spacer(1, 3))
 
     # ── Report Body ────────────────────────────────────────────────────────
     body_flowables = _parse_markdown_to_flowables(report_text, styles)

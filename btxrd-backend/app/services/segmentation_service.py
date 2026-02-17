@@ -142,6 +142,7 @@ class SegmentationService:
             mask = (prob > self.threshold).cpu().numpy()[0, 0].astype(np.uint8)
 
         coverage = float(mask.sum()) / float(mask.size) * 100.0
+        
         return {
             "mask": mask,
             "tumor_coverage": round(coverage, 2),

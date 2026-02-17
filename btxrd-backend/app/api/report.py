@@ -38,9 +38,21 @@ async def generate_report(req: ReportRequest):
     llm = _get_llm()
     settings = get_settings()
 
+    # Build patient info dict
+    patient_info = None
+    if req.patient_name or req.patient_age or req.clinical_indication:
+        patient_info = {
+            "patient_name": req.patient_name,
+            "patient_age": req.patient_age,
+            "clinical_indication": req.clinical_indication,
+        }
+
+    # Use custom case_id if provided, otherwise fallback to image_id
+    case_id = req.case_id or req.image_id
+
     # 1. Generate report text via LLM
     try:
-        report_text = await llm.generate_report(req.analysis)
+        report_text = await llm.generate_report(req.analysis, patient_info)
     except Exception as e:
         logger.error("Report text generation failed: %s", e)
         raise HTTPException(status_code=500, detail=f"Report generation error: {str(e)}")
@@ -52,7 +64,8 @@ async def generate_report(req: ReportRequest):
             report_text=report_text,
             analysis=req.analysis,
             upload_dir=settings.resolved_upload_dir,
-            case_id=req.image_id or "N/A",
+            case_id=case_id,
+            patient_info=patient_info,
         )
 
         # Save PDF to results directory

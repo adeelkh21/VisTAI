@@ -38,11 +38,11 @@ export default function SegmentationViewer({ originalUrl, segmentation }: Props)
       </div>
 
       {/* Image */}
-      <div className="relative aspect-square bg-black flex items-center justify-center p-6">
+      <div className="relative bg-black flex items-center justify-center p-4" style={{height: '480px'}}>
         <img
           src={fileUrl(originalUrl)}
           alt="Original X-ray"
-          className="absolute inset-0 w-full h-full object-contain p-6"
+          className="absolute inset-0 w-full h-full object-contain p-4"
         />
         <motion.img
           key={view}
@@ -51,7 +51,7 @@ export default function SegmentationViewer({ originalUrl, segmentation }: Props)
           transition={{ duration: 0.3 }}
           src={fileUrl(views[view].url)}
           alt={views[view].label}
-          className="absolute inset-0 w-full h-full object-contain p-6"
+          className="absolute inset-0 w-full h-full object-contain p-4"
         />
       </div>
 

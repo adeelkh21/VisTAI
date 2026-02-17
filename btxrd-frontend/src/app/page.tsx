@@ -328,11 +328,12 @@ export default function Home() {
                       <h3 className="text-lg font-semibold tracking-tight text-[#f8fafc]">Attention Map</h3>
                       <p className="text-sm text-[#94a3b8] mt-0.5">Grad-CAM visualization showing model focus</p>
                     </div>
-                    <div className="aspect-square bg-black flex items-center justify-center p-4">
+                    <div className="bg-black flex items-center justify-center p-4" style={{maxHeight: '480px'}}>
                       <img
                         src={fileUrl(analysisResult.cls_gradcam_url)}
                         alt="Grad-CAM Heatmap"
-                        className="w-full h-full object-contain"
+                        className="w-full object-contain"
+                        style={{maxHeight: '450px'}}
                       />
                     </div>
                   </motion.div>
@@ -496,24 +497,15 @@ export default function Home() {
           {step !== "landing" && (
             <div className="hidden md:flex items-center gap-2">
               {Object.entries(stepConfig)
-                .filter(([key]) => key !== "landing")
-                .slice(0, stepConfig[step].index)
+                .filter(([key]) => key !== "landing" && stepConfig[key].index < stepConfig[step].index)
                 .map(([key, config], i, arr) => (
                   <React.Fragment key={key}>
                     <span
-                      className={`text-xs font-medium transition-colors ${
-                        stepConfig[step].index > config.index
-                          ? "text-slate-400"
-                          : stepConfig[step].index === config.index
-                          ? "text-blue-400"
-                          : "text-slate-600"
-                      }`}
+                      className="text-xs font-medium text-slate-400"
                     >
                       {config.label}
                     </span>
-                    {i < arr.length - 1 && (
-                      <span className="text-slate-700">›</span>
-                    )}
+                    <span className="text-slate-700">›</span>
                   </React.Fragment>
                 ))}
               <span className="text-xs font-semibold text-blue-400">

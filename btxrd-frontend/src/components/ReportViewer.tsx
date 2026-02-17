@@ -5,6 +5,7 @@ import { motion } from "framer-motion";
 import { FileText, Download, Loader2, RefreshCw, CheckCircle, AlertTriangle } from "lucide-react";
 import { generateReport, fileUrl } from "@/lib/api";
 import { useAppStore } from "@/store/useAppStore";
+import PatientInfoDialog, { PatientInfo } from "./PatientInfoDialog";
 
 /* ── Minimal Markdown → JSX renderer ─────────────────────────────────── */
 
@@ -192,14 +193,25 @@ export default function ReportViewer() {
   const { imageId, analysisResult, report, pdfUrl, setReport } = useAppStore();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [showPatientDialog, setShowPatientDialog] = useState(false);
 
-  const handleGenerate = async () => {
+  const handleGenerateClick = () => {
     if (!imageId || !analysisResult) return;
+    setShowPatientDialog(true);
+  };
+
+  const handlePatientInfoSubmit = async (patientInfo: PatientInfo) => {
+    setShowPatientDialog(false);
     setLoading(true);
     setError(null);
 
     try {
-      const resp = await generateReport(imageId, analysisResult);
+      const resp = await generateReport(imageId!, analysisResult!, {
+        caseId: patientInfo.caseId,
+        patientName: patientInfo.patientName,
+        patientAge: parseInt(patientInfo.patientAge),
+        clinicalIndication: patientInfo.clinicalIndication,
+      });
       setReport(resp.report, resp.pdf_url);
     } catch (e: unknown) {
       setError(e instanceof Error ? e.message : "Failed to generate report");
@@ -248,7 +260,7 @@ export default function ReportViewer() {
               <motion.button
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
-                onClick={handleGenerate}
+                onClick={handleGenerateClick}
                 disabled={loading}
                 className="flex items-center gap-1.5 px-3 py-2 rounded-lg border border-[#334155]
                            text-xs font-medium text-[#94a3b8] hover:text-[#e2e8f0] hover:bg-[#1e293b] transition-all
@@ -290,7 +302,7 @@ export default function ReportViewer() {
             <motion.button
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
-              onClick={handleGenerate}
+              onClick={handleGenerateClick}
               className="px-8 py-3 rounded-xl bg-gradient-to-r from-blue-500 to-blue-600 text-white font-semibold
                          shadow-lg shadow-blue-500/20 hover:shadow-blue-500/30 transition-all"
             >
@@ -317,7 +329,7 @@ export default function ReportViewer() {
             <p className="text-sm font-medium text-red-400 mb-1">Report Generation Failed</p>
             <p className="text-xs text-[#64748b] mb-4">{error}</p>
             <button
-              onClick={handleGenerate}
+              onClick={handleGenerateClick}
               className="text-sm text-blue-400 hover:text-blue-300 font-medium transition-colors"
             >
               Try Again
@@ -354,6 +366,13 @@ export default function ReportViewer() {
           </p>
         </div>
       )}
+
+      {/* Patient Info Dialog */}
+      <PatientInfoDialog
+        isOpen={showPatientDialog}
+        onClose={() => setShowPatientDialog(false)}
+        onSubmit={handlePatientInfoSubmit}
+      />
     </motion.div>
   );
 }

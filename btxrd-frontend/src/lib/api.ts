@@ -102,13 +102,30 @@ export interface ReportResponse {
   pdf_url: string | null;
 }
 
+export interface PatientInfo {
+  caseId?: string;
+  patientName?: string;
+  patientAge?: number;
+  clinicalIndication?: string;
+}
+
 export async function generateReport(
   imageId: string,
-  analysis: InferenceResult
+  analysis: InferenceResult,
+  patientInfo?: PatientInfo
 ): Promise<ReportResponse> {
+  const body: any = { image_id: imageId, analysis };
+  
+  if (patientInfo) {
+    if (patientInfo.caseId) body.case_id = patientInfo.caseId;
+    if (patientInfo.patientName) body.patient_name = patientInfo.patientName;
+    if (patientInfo.patientAge) body.patient_age = patientInfo.patientAge;
+    if (patientInfo.clinicalIndication) body.clinical_indication = patientInfo.clinicalIndication;
+  }
+  
   return request<ReportResponse>("/api/report", {
     method: "POST",
-    body: JSON.stringify({ image_id: imageId, analysis }),
+    body: JSON.stringify(body),
   });
 }
 
