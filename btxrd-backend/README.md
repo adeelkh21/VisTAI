@@ -15,7 +15,7 @@ pip install -r requirements.txt
 
 # 3. Configure environment
 cp .env.example .env
-# Edit .env → set BTXRD_PROJECT_ROOT and optionally OPENAI_API_KEY
+# Edit .env → set BTXRD_PROJECT_ROOT and LOCAL_LLM_MODEL_PATH
 
 # 4. Run server
 uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
@@ -61,11 +61,14 @@ btxrd-backend/
 
 ## LLM Configuration
 
-The backend supports two LLM backends:
+The backend uses a local GGUF model through `llama-cpp-python`.
 
-1. **OpenAI API** (recommended) – Set `OPENAI_API_KEY` in `.env`
-2. **Local TinyLlama** – Falls back automatically if no API key is set (requires GPU)
-3. **Mock mode** – If neither is available, returns structured mock responses
+Required `.env` keys:
+
+- `LOCAL_LLM_MODEL_PATH` (example: `C:/Users/Nauman/models/gemma-2-2b-it-Q4_K_M.gguf`)
+- `LOCAL_LLM_N_CTX`
+- `LOCAL_LLM_N_THREADS`
+- `LOCAL_LLM_N_GPU_LAYERS`
 
 ## Models
 

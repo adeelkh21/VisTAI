@@ -11,24 +11,35 @@ import os
 from app.config import get_settings
 from app.services.classification_service import ClassificationService
 from app.services.segmentation_service import SegmentationService
-from app.api import upload, inference, chat, report
+from app.services.mobilenet_service import MobileNetInferenceService
+from app.api import upload, inference, chat, report, mobilenet
 
 
 # ── Shared singletons (loaded once at startup) ────────────────────────────
 cls_service: ClassificationService | None = None
 seg_service: SegmentationService | None = None
+mobilenet_service: MobileNetInferenceService | None = None
 
 
 @asynccontextmanager
 async def lifespan(application: FastAPI):
     """Load heavy ML models once on startup, release on shutdown."""
-    global cls_service, seg_service
+    global cls_service, seg_service, mobilenet_service
     settings = get_settings()
 
     print("⏳  Loading classification model …")
     cls_service = ClassificationService(settings)
     print("⏳  Loading segmentation model …")
     seg_service = SegmentationService(settings)
+    
+    print("⏳  Loading MobileNetV2 model …")
+    try:
+        mobilenet_service = MobileNetInferenceService(settings)
+        print("✅  MobileNetV2 loaded successfully")
+    except Exception as e:
+        print(f"⚠️   MobileNetV2 failed to load: {e}")
+        mobilenet_service = None
+    
     print("✅  Models loaded and ready.\n")
 
     # Ensure upload & output dirs exist
@@ -40,6 +51,7 @@ async def lifespan(application: FastAPI):
     # Cleanup
     cls_service = None
     seg_service = None
+    mobilenet_service = None
     print("🛑  Models unloaded.")
 
 
@@ -67,6 +79,7 @@ def create_app() -> FastAPI:
     app.include_router(inference.router, prefix="/api", tags=["Inference"])
     app.include_router(chat.router, prefix="/api", tags=["Chat"])
     app.include_router(report.router, prefix="/api", tags=["Report"])
+    app.include_router(mobilenet.router, prefix="/api", tags=["MobileNet"])
 
     # ── Serve uploaded/generated files ─────────────────────────────────────
     os.makedirs(settings.resolved_upload_dir, exist_ok=True)
