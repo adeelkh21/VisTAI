@@ -1,0 +1,23 @@
+version: "3.8"
+
+# Override for local development (Windows/Mac)
+# Usage: docker compose -f docker-compose.yml -f docker-compose.dev.yml up
+
+services:
+  backend:
+    env_file:
+      - .env.local
+    # Remove memory limit for development
+    mem_limit: null
+    # Remove nvidia runtime (dev machine may not have it)
+    runtime: null
+    # !! USER ACTION REQUIRED: set the local path to your models folder below !!
+    volumes:
+      - ./btxrd-backend/models:/app/models:ro
+      - ./uploads:/app/uploads
+      - ./reports:/app/reports
+
+  frontend:
+    volumes:
+      - ./btxrd-frontend:/app
+      - /app/node_modules
