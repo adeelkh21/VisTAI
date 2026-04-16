@@ -16,6 +16,11 @@ env/
 # Environment variables
 .env
 .env.local
+.env.jetson
+config.yaml
+
+# Development config
+.claude/
 
 # Jupyter Notebook
 .ipynb_checkpoints
@@ -39,6 +44,14 @@ outputs/
 *.ckpt
 *.h5
 *.weights
+*.onnx
+*.trt
+BTXRD/combined_inference/models/
+BTXRD/mobilenet/
+BTXRD/btxrd-classification-kd/pretrained/
+BTXRD/btxrd-segmentation-kd/pretrained/
+BTXRD/btxrd-segmentation-kd/outputs/
+BTXRD/btxrd-classification-kd/outputs/
 
 # Large dataset files
 images_resized/
