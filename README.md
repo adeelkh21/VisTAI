@@ -73,14 +73,14 @@ The dataset supports both classification and segmentation tasks, enabling multi-
 | Model | Role | Parameters | Accuracy |
 |-------|------|------------|----------|
 | ConvNeXt-Base | Teacher | ~88M | 94.2% |
-| EfficientNet-B0 | Student | ~5M | 91.8% |
+| ConvNeXt-Tiny | Student | ~5M | 91.8% |
 
 ### Segmentation Models
 
 | Model | Role | Parameters | Dice Score |
 |-------|------|------------|------------|
 | Swin-UNet | Teacher | ~27M | 0.89 |
-| nnU-Net | Student | ~8M | 0.85 |
+| SegFormer-B2 | Student | ~8M | 0.85 |
 
 ---
 
